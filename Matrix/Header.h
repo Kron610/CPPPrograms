@@ -1,5 +1,4 @@
 #pragma once 
-#include "stdafx.h" 
 #include <malloc.h> 
 #include <stdio.h> 
 typedef struct
@@ -16,7 +15,7 @@ typedef struct
 }
 Complex;
 Matrix* matrix_alloc(int N, int size_element);
-void matrix_set(Matrix * m, int i, int j, void * element);
+void matrix_set(Matrix *m, int i, int j, void *element);
 void* matrix_get(Matrix * m, int i, int j, void * element);
 void* Complex_sum(void* c1, void* c2, void* result_sum);
 void* Complex_multiply(void* c1, void* c2, void* result_multiply);
