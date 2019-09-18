@@ -1,5 +1,4 @@
-#pragma once
-#include "stdafx.h"
+﻿#pragma once
 #include "Header.h"
 #include "Sequence_list.h"
 #include "Sequence_array.h"

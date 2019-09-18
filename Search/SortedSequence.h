@@ -1,5 +1,4 @@
-#pragma once
-#include "stdafx.h"
+﻿#pragma once
 #include <time.h>
 using namespace std;
 

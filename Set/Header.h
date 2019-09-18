@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include <stdio.h>
 #include <malloc.h>
 typedef struct complex

@@ -1,4 +1,4 @@
-#ifndef _TEST__T__
+﻿#ifndef _TEST__T__
 #define _TEST__T__
 #include "Class.h"
 #include <iostream>
@@ -14,6 +14,8 @@ tree<double> *test_tree( )
 	maintree->add_element(3.7);
 	return maintree;
 }
+
+
 
 void map_test( )
 {
@@ -33,6 +35,8 @@ void map_test( )
 	delete maintree;
 	delete map_tree;
 }
+
+
 
 void where_test( ) 
 {
@@ -54,6 +58,9 @@ void where_test( )
 	delete maintree$;
 	delete where_tree;
 }
+
+
+
 void merge_test( )
 {
 	tree<double> *maintree=new tree<double>;
@@ -66,6 +73,8 @@ void merge_test( )
 	delete maintree;
 	delete maintree2;
 }
+
+
 
 void subtree_test( )
 {
@@ -88,6 +97,9 @@ void contain_el_test( )
 	else cout<<"el_contain_test: fall"<<endl;
 	delete maintree;
 }
+
+
+
 void contain_tree_test( )
 {
 	tree<double> *maintree=new tree<double>;

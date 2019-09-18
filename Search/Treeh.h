@@ -1,6 +1,7 @@
-#pragma once
+п»ї#pragma once
 #include "SortedSequence.h"
 #include <time.h>
+#include <chrono>
 
 template <typename T>
 class TreeNode
@@ -83,7 +84,7 @@ private:
 		p->height = (hl > hr ? hl : hr) + 1;
 	}
 
-	TreeNode<T>* rotateright(TreeNode<T>* &p) // правый поворот вокруг p
+	TreeNode<T>* rotateright(TreeNode<T>* &p) // РїСЂР°РІС‹Р№ РїРѕРІРѕСЂРѕС‚ РІРѕРєСЂСѓРі p
 	{
 		TreeNode<T>* q = p->left;
 		p->left = q->right;
@@ -93,7 +94,7 @@ private:
 		return q;
 	}
 
-	TreeNode<T>* rotateleft(TreeNode<T>* &q) // левый поворот вокруг q
+	TreeNode<T>* rotateleft(TreeNode<T>* &q) // Р»РµРІС‹Р№ РїРѕРІРѕСЂРѕС‚ РІРѕРєСЂСѓРі q
 	{
 		TreeNode<T>* p = q->right;
 		q->right = p->left;
@@ -103,7 +104,7 @@ private:
 		return p;
 	}
 
-	TreeNode<T>* balance(TreeNode<T>* &p) // балансировка узла p
+	TreeNode<T>* balance(TreeNode<T>* &p) // Р±Р°Р»Р°РЅСЃРёСЂРѕРІРєР° СѓР·Р»Р° p
 	{
 		fixheight(p);
 		if (bfactor(p) == 2)
@@ -118,7 +119,7 @@ private:
 				p->left = rotateleft(p->left);
 			return rotateright(p);
 		}
-		return p; // балансировка не нужна
+		return p; // Р±Р°Р»Р°РЅСЃРёСЂРѕРІРєР° РЅРµ РЅСѓР¶РЅР°
 	}
 	void destroy(TreeNode<T>* node)
 	{

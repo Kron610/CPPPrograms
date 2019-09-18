@@ -1,5 +1,4 @@
-#pragma once
-#include "stdafx.h"
+п»ї#pragma once
 #include "Header.h"
 #include <iostream>
 using namespace std;
@@ -232,7 +231,7 @@ public:
 		}
 	}
 
-	// Методы для 1 л/р:
+	// РњРµС‚РѕРґС‹ РґР»СЏ 1 Р»/СЂ:
 
 	void Put(T item, int index)
 	{

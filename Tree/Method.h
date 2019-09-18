@@ -1,8 +1,10 @@
-#ifndef _METHOD__M__
+﻿#ifndef _METHOD__M__
 #define _METHOD__M__
+
 #define LEFT 0
 #define MIDDLE 1
 #define RIGHT 2
+
 #include <complex>
 #include "Class.h"
 using namespace std;

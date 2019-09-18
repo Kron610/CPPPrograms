@@ -1,9 +1,12 @@
-#pragma once
+п»ї#pragma once
 #include "Header.h"
 #include "Sequence_array.h"
 #include "Sequence_list.h"
 #include <time.h>
 #include <stdlib.h>
+
+
+
 template <typename T>
 void ShellSort(Sequence<T>* sequence)
 {
@@ -24,6 +27,8 @@ void ShellSort(Sequence<T>* sequence)
 			sequence->Put(tmp,j);
 		}
 }
+
+
 
 template <typename T>
 void quickSortR(Sequence<T>* sequence, int first, int last)
@@ -49,6 +54,8 @@ void quickSortR(Sequence<T>* sequence, int first, int last)
 	}
 }
 
+
+
 template <typename T>
 void QuickSort(Sequence<T>* sequence)
 {
@@ -56,27 +63,31 @@ void QuickSort(Sequence<T>* sequence)
 	quickSortR(sequence, left, sequence->GetLength() - 1);
 }
 
+
+
 template<typename T>
 void downHeap(Sequence<T>* sequence, int k, int n) {
-	//  процедура просеивания следующего элемента 
-	//  До процедуры: a[k+1]...a[n]  - пирамида 
-	//  После:  a[k]...a[n]  - пирамида 
+	//  РїСЂРѕС†РµРґСѓСЂР° РїСЂРѕСЃРµРёРІР°РЅРёСЏ СЃР»РµРґСѓСЋС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° 
+	//  Р”Рѕ РїСЂРѕС†РµРґСѓСЂС‹: a[k+1]...a[n]  - РїРёСЂР°РјРёРґР° 
+	//  РџРѕСЃР»Рµ:  a[k]...a[n]  - РїРёСЂР°РјРёРґР° 
 	T new_elem;
 	long child;
 	new_elem = sequence->Get(k);
 
-	while (k <= n / 2) {  		// пока у a[k] есть дети 
+	while (k <= n / 2) {  		// РїРѕРєР° Сѓ a[k] РµСЃС‚СЊ РґРµС‚Рё 
 		child = 2 * k;
-		//  выбираем большего сына 
+		//  РІС‹Р±РёСЂР°РµРј Р±РѕР»СЊС€РµРіРѕ СЃС‹РЅР° 
 		if (child < n && sequence->Get(child) < sequence->Get(child+1))
 			child++;
 		if (new_elem >= sequence->Get(child)) break;
-		// иначе 
-		sequence->Put(sequence->Get(child),k); 	// переносим сына наверх 
+		// РёРЅР°С‡Рµ 
+		sequence->Put(sequence->Get(child),k); 	// РїРµСЂРµРЅРѕСЃРёРј СЃС‹РЅР° РЅР°РІРµСЂС… 
 		k = child;
 	}
 	sequence->Put(new_elem, k);
 }
+
+
 
 template<typename T>
 void HeapSort(Sequence<T>* sequence) 
@@ -85,19 +96,21 @@ void HeapSort(Sequence<T>* sequence)
 	int i;
 	T temp;
 
-	// строим пирамиду 
+	// СЃС‚СЂРѕРёРј РїРёСЂР°РјРёРґСѓ 
 	for (i = size / 2 - 1; i >= 0; i--) downHeap(sequence, i, size - 1);
 
-	// теперь a[0]...a[size-1] пирамида 
+	// С‚РµРїРµСЂСЊ a[0]...a[size-1] РїРёСЂР°РјРёРґР° 
 
 	for (i = size - 1; i > 0; i--) {
-		// меняем первый с последним 
+		// РјРµРЅСЏРµРј РїРµСЂРІС‹Р№ СЃ РїРѕСЃР»РµРґРЅРёРј 
 		temp = sequence->Get(i); sequence->Put(sequence->Get(0),i); sequence->Put(temp,0);
 
-		// восстанавливаем пирамидальность a[0]...a[i-1] 
+		// РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРёСЂР°РјРёРґР°Р»СЊРЅРѕСЃС‚СЊ a[0]...a[i-1] 
 		downHeap(sequence, 0, i - 1);
 	}
 }
+
+
 
 template<typename T>
 clock_t time_function(void(*Sort)(Sequence<T>* sequence), Sequence<T>* sequence)
@@ -107,6 +120,8 @@ clock_t time_function(void(*Sort)(Sequence<T>* sequence), Sequence<T>* sequence)
 	t = clock() - t;
 	return t;
 }
+
+
 
 template<typename T>
 void fill_random(Sequence<T>* sequence, int range)
@@ -156,6 +171,8 @@ void sort_comparison(void(*Sort1)(Sequence<T>* sequence), void(*Sort2)(Sequence<
 	cout << "Time of the first: " << t1 << '\t' << "Time of the second: " << t2 << endl;
 }
 
+
+
 template <typename T>
 void change_order(Sequence<T>* sequence)
 {
@@ -171,6 +188,8 @@ void change_order(Sequence<T>* sequence)
 		j--;
 	}
 }
+
+
 
 template <typename T>
 int test_is_ordered(Sequence<T>* sequence)
@@ -195,6 +214,8 @@ int test_is_ordered(Sequence<T>* sequence)
 		return 0;
 	}
 }
+
+
 
 void compare_sorts()
 {
@@ -235,6 +256,8 @@ void compare_sorts()
 	cout << endl;
 	sort_comparison<int>(sort1, sort2, Size);
 }
+
+
 
 void test_sorts()
 {
@@ -302,6 +325,8 @@ void test_sorts()
 	cout << endl;
 }
 
+
+
 void check_time()
 {
 	void(*sort1)(Sequence<int>*) = QuickSort;
@@ -352,6 +377,8 @@ void check_time()
 	}
 	cout << " The time of sort:\n" << time_function<int>(sort1, sequence) << endl;
 }
+
+
 
 void automatic_test( void(*sort1)(Sequence<int>*) )
 {
