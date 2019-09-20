@@ -11,7 +11,7 @@ template <typename T>
 class List
 {
 public:
-    struct List* next;
+    List* next;
     T data;
 };
 
@@ -21,6 +21,8 @@ class SequenceList : public Sequence<T>
 
 public:
 
+    using SizeType = typename Sequence<T>::SizeType;
+
     Iterator<T>* getIterator()
     {
         auto it = new Iterator<T>(this);
@@ -29,37 +31,24 @@ public:
 
 
 
-    explicit SequenceList<T>(int N = 0)
+    explicit SequenceList()
     {
-        this->length_ = N;
-        if (N == 0)
-            return;
-        else
-        {
-            this->first = new List<T>;
-            auto temporaryNode = new List<T>;
-            this->first->next = temporaryNode;
-            for (int i = 0; i < N - 1; i++)
-            {
-                temporaryNode->next = new List<T>;
-                temporaryNode = temporaryNode->next;
-            }
-            temporaryNode = nullptr;
-        }
+        first_ = 0;
+        this->length_ = 0;
     }
 
 
 
-    ~SequenceList<T>()
+    ~SequenceList()
     {
         if (this->isEmpty() == 0)
         {
             struct List<T>* temporaryNode;
-            for (int i = 0; i < this->getLength() - 1; i++)
+            for (SizeType i = 0; i < this->getLength() - 1; i++)
             {
-                temporaryNode = this->first;
-                if (this->first->next != nullptr)
-                    this->first = this->first->next;
+                temporaryNode = this->first_;
+                if (this->first_->next != nullptr)
+                    this->first_ = this->first_->next;
                 delete temporaryNode;
             }
         }
@@ -67,12 +56,15 @@ public:
 
 
 
-    T get(int index) const override
+    T get(SizeType index) const override
     {
-        if ((index < 0) || (index >= this->getLength()))
-            throw "Wrong index";
-        auto temporaryNode = this->first;
-        for (int i = 0; i < index; i++)
+
+        if (index < 0)
+            throw std::invalid_argument("Invalid argument");
+        if (index >= this->length_)
+            throw std::out_of_range("Argument is out of range");
+        auto temporaryNode = this->first_;
+        for (SizeType i = 0; i < index; i++)
         {
             temporaryNode = temporaryNode->next;
         }
@@ -85,7 +77,7 @@ public:
         {
             throw "Sequence is empty";
         }
-        return this->first->data;
+        return this->first_->data;
     }
 
 
@@ -96,8 +88,8 @@ public:
         {
             throw "Sequence is empty";
         }
-        auto temporaryNode = this->first;
-        for (int i = 0; i < this->getLength() - 1; i++)
+        auto temporaryNode = this->first_;
+        for (SizeType i = 0; i < this->getLength() - 1; i++)
         {
             temporaryNode = temporaryNode->next;
         }
@@ -106,7 +98,7 @@ public:
 
 
 
-    SequenceList<T>* getSubsequence(int startIndex, int endIndex)
+    SequenceList<T>* getSubsequence(SizeType startIndex, SizeType endIndex)
     {
         if (this->isEmpty())
             throw "Sequence is empty";
@@ -114,15 +106,15 @@ public:
             throw "Wrong index";
         if (startIndex > endIndex)
             throw "Start index is more than last index";
-        auto temporaryNode = this->first;
+        auto temporaryNode = this->first_;
         auto newSequence = new SequenceList<T>(endIndex - startIndex + 1);
-        for (int i = 0; i < startIndex; i++)
+        for (SizeType i = 0; i < startIndex; i++)
         {
             temporaryNode = temporaryNode->next;
         }
-        newSequence->first->data = temporaryNode->data;
-        auto temporaryNode2 = newSequence->first;
-        for (int i = startIndex; i < endIndex; i++)
+        newSequence->first_->data = temporaryNode->data;
+        auto temporaryNode2 = newSequence->first_;
+        for (SizeType i = startIndex; i < endIndex; i++)
         {
             temporaryNode2 = temporaryNode2->next;
             temporaryNode = temporaryNode->next;
@@ -137,13 +129,13 @@ public:
     {
         if (this->isEmpty())
         {
-            this->first = new List<T>;
-            this->first->data = item;
+            this->first_ = new List<T>;
+            this->first_->data = item;
         }
         else
         {
-            auto temporaryNode = this->first;
-            for (int i = 0; i < this->getLength() - 1; i++)
+            auto temporaryNode = this->first_;
+            for (SizeType i = 0; i < this->getLength() - 1; i++)
             {
                 temporaryNode = temporaryNode->next;
             }
@@ -162,18 +154,18 @@ public:
         temporaryNode->data = item;
         if (this->isEmpty())
         {
-            this->first = temporaryNode;
+            this->first_ = temporaryNode;
         }
         else
         {
-            temporaryNode->next = this->first;
-            this->first = temporaryNode;
+            temporaryNode->next = this->first_;
+            this->first_ = temporaryNode;
         }
     }
 
 
 
-    void insertArt(int index, const T& item) override
+    void insertArt(SizeType index, const T& item) override
     {
         if ((index < 0) || (index >= this->getLength()))
         {
@@ -184,13 +176,13 @@ public:
         {
             temporaryNode = new List<T>;
             temporaryNode->data = item;
-            temporaryNode->next = this->first;
-            this->first = temporaryNode;
+            temporaryNode->next = this->first_;
+            this->first_ = temporaryNode;
         }
         else
         {
-            temporaryNode = this->first;
-            for (int i = 1; i < index; i++)
+            temporaryNode = this->first_;
+            for (SizeType i = 1; i < index; i++)
                 temporaryNode = temporaryNode->next;
             auto temporaryNode2 = new List<T>;
             temporaryNode2->data = item;
@@ -202,16 +194,16 @@ public:
 
 
 
-    int findItem(const T& item) const override
+    SizeType findItem(const T& item) const override
     {
         if (this->isEmpty())
             return 0;
         else
         {
-            List<T>* temporaryNode = this->first;
+            List<T>* temporaryNode = this->first_;
             if (temporaryNode->data == item)
                 return 1;
-            for (int i = 1; i < this->getLength(); i++)
+            for (SizeType i = 1; i < this->getLength(); i++)
             {
                 temporaryNode = temporaryNode->next;
                 if (temporaryNode->data == item)
@@ -225,18 +217,18 @@ public:
 
     void remove(const T& item) override
     {
-        int position = this->findItem(item);
+        SizeType position = this->findItem(item);
         if (position)
         {
-            auto temporaryNode = this->first;
+            auto temporaryNode = this->first_;
             if (position == 1)
             {
-                this->first = this->first->next;
+                this->first_ = this->first_->next;
                 delete temporaryNode;
             }
             else
             {
-                for (int i = 0; i < position - 2; i++)
+                for (SizeType i = 0; i < position - 2; i++)
                     temporaryNode = temporaryNode->next;
                 auto temporaryNode2 = temporaryNode->next;
                 temporaryNode->next = temporaryNode2->next;
@@ -252,54 +244,50 @@ public:
     {
 
         if (this->isEmpty())
-            cout << "This sequence is empty" << endl;
+            std::cout << "This sequence is empty" << std::endl;
         else
         {
-            cout << "Your sequence:" << endl;
-            auto temporaryNode = this->first;
-            cout << temporaryNode->data << '\t';
-            for (int i = 0; i < this->getLength() - 1; i++)
+            std::cout << "Your sequence:" << std::endl;
+            auto temporaryNode = this->first_;
+            std::cout << temporaryNode->data << '\t';
+            for (SizeType i = 0; i < this->getLength() - 1; i++)
             {
                 temporaryNode = temporaryNode->next;
-                cout << temporaryNode->data << '\t';
+                std::cout << temporaryNode->data << '\t';
             }
-            cout << endl << endl;
+            std::cout << std::endl << std::endl;
         }
     }
 
 
 
-    void inputElements() override
+    void inputElements(SizeType numberOfElements) override
     {
-        if (!(this->isEmpty()))
-        {
-            auto temporaryNode = this->first;
-            cout << "Enter the items" << endl;
-            cout << "Enter the first item" << endl;
-            cin >> temporaryNode->data;
-            for (int i = 0; i < this->getLength() - 1; i++)
+            std::cout << "Enter the items" << std::endl;
+            std::cout << "Enter the first_ item" << std::endl;
+            T item;
+            for (SizeType i = 0; i < numberOfElements; i++)
             {
-                temporaryNode = temporaryNode->next;
-                cout << "Enter the " << i + 2 << " item" << endl;
-                cin >> temporaryNode->data;
+                std::cout << "Enter the " << i + 1 << " item" << std::endl;
+                std::cin >> item;
+                this->prepend(item);
             }
-        }
     }
 
     // Методы для 1 л/р:
 
-    void set(T item, int index) override
+    void set(T item, SizeType index) override
     {
-        auto temporaryNode = this->first;
+        auto temporaryNode = this->first_;
         if (index == 0)
         {
-            this->first->data = item;
+            this->first_->data = item;
         }
-        for (int i = 0; i < index; i++)
+        for (SizeType i = 0; i < index; i++)
             temporaryNode = temporaryNode->next;
         temporaryNode->data = item;
     }
 
 private:
-    List<T>* first;
+    List<T>* first_;
 };

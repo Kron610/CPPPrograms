@@ -8,38 +8,44 @@
 using namespace std;
 template<typename T> class Sequence
 {
-
 public:
+
+    using SizeType = size_t;
+
     int getLength() const
     {
         return length_;
     }
 
-    int isEmpty() const
+    // snake_case
+
+    bool isEmpty() const
     {
         return length_ == 0;
     }
 
 
 
-    virtual T get(int index) const  = 0;
+    virtual T get(SizeType index) const  = 0;
     virtual T getFirst() const  = 0;
     virtual T getLast() const = 0;
     virtual void append(const T& item) = 0;
     virtual void prepend(const T& item) = 0;
-    virtual void insertArt(int index, const T &item) = 0;
+    virtual void insertArt(SizeType index, const T &item) = 0;
     virtual void remove(const T& item) = 0;
     virtual void output() const = 0;
-    virtual void inputElements() = 0;
-    virtual void set(T item, int index) = 0;
+    virtual void inputElements(SizeType numberOfElements) = 0;
+    virtual void set(T item, SizeType index) = 0;
 
 protected:
+
     int length_;
 
-    virtual int findItem(const T& item) const  = 0;
+    virtual SizeType findItem(const T& item) const  = 0;
 
 };
-
+// for(const auto& item: sequence) { ... } === for(auto it = sequence.(c)begin(); it != sequence.end(); it++)
+// std::forward_iterator_tag
 template <typename T>
 class Iterator
 {

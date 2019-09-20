@@ -5,17 +5,16 @@
 #pragma once
 #include "Header.h"
 #include <iostream>
-using namespace std;
+
 
 
 template <typename T>
 class SequenceArray : public Sequence<T>
-
 {
-
-
 public:
 
+    using SizeType = typename Sequence<T>::SizeType;
+    
     Iterator<T>* getIterator()
     {
         auto it = new Iterator<T>(this);
@@ -24,41 +23,37 @@ public:
 
 
 
-    int getMemoryLength() const
+    SizeType getMemoryLength() const
     {
         return memoryLength_;
     }
 
 
 
-    explicit SequenceArray<T>(int N = 0)
+    explicit SequenceArray()
     {
-        this->length_ = N;
-        memoryLength_ = N;
-        if (N == 0)
-            return;
-        else
-        {
-            elementsArray_ = new T[N];
-        }
+        this->length_ = 0;
+        memoryLength_ = 1;
+        elements_ = new T[1];
     }
 
 
 
-    ~SequenceArray<T>()
+    ~SequenceArray()
     {
-        delete [] elementsArray_;
+        delete [] elements_;
     }
 
 
 
-    T get(int index) const override
+    T get(SizeType index) const override
     {
-        if ((index < 0) || (index >= this->getLength()))
-        {
-            throw "Wrong index";
-        }
-        return elementsArray_[index];
+        if (index < 0)
+            throw std::invalid_argument("Invalid argument");
+        if (index >= this->length_)
+            throw std::out_of_range("Argument is out of range");
+
+        return elements_[index];
     }
 
 
@@ -66,10 +61,8 @@ public:
     T getFirst() const override
     {
         if (this->isEmpty())
-        {
-            throw "Sequence is empty";
-        }
-        return elementsArray_[0];
+            throw std::out_of_range("Sequence is empty");
+        return elements_[0];
     }
 
 
@@ -77,31 +70,33 @@ public:
     T getLast() const override
     {
         if (this->isEmpty())
-        {
-            throw "Sequence is empty";
-        }
-        return elementsArray_[this->getLength() - 1];
+            throw std::out_of_range("Sequence is empty");
+
+        return elements_[this->length_ - 1];
     }
 
 
 
-    SequenceArray<T>* getSubsequence(int startIndex, int endIndex)
+    SequenceArray<T>* getSubsequence(SizeType startIndex, SizeType endIndex)
     {
         if (this->isEmpty())
-            throw "Sequence is empty";
-        if ((startIndex < 0) || (startIndex > this->getLength()) || (endIndex < 0) || (endIndex > this->getLength()))
-            throw "Wrong index";
+            throw std::out_of_range("Sequence is empty");
+        if ((startIndex < 0) || (startIndex > this->length_) || (endIndex < 0) || (endIndex > this->length_))
+            throw std::invalid_argument("Invalid index");
         if (startIndex > endIndex)
-            throw "Start index is more than last index";
+            throw std::invalid_argument("Start index is more than last index");
+        if ((startIndex > this->length_) || (endIndex > this->length_))
+            throw std::out_of_range("Indices is out of range");
+
         auto newSequence = new SequenceArray<T>(endIndex - startIndex + 1);
-        for (int i = startIndex; i < endIndex + 1; i++)
-            newSequence->elementsArray_[i - startIndex] = this->get(i);
+        for (auto i = startIndex; i < endIndex + 1; i++)
+            newSequence->elements_[i - startIndex] = this->get(i);
         return newSequence;
     }
 
 
 
-    void swap(int i, int j)
+    void swap(SizeType i, SizeType j) noexcept
     {
         T element = this->get(i);
         this->set(this->get(j), i);
@@ -112,98 +107,57 @@ public:
 
     void append(const T& item) override
     {
-        if (this->getLength() == this->getMemoryLength())
-        {
-            this->memoryLength_ = this->getLength() * 2 + 1;
-            auto temporaryArray = new T[this->getMemoryLength()];
-            for (int i = 0; i < this->getLength(); i++)
-            {
-                temporaryArray[i] = this->get(i);
-            }
-            temporaryArray[this->getLength()] = item;
-            this->elementsArray_ = temporaryArray;
-            this->length_ += 1;
-        }
-        else
-        {
-            this->elementsArray_[this->getLength()] = item;
-            this->length_ += 1;
-        }
+        if (this->length_ == this->getMemoryLength())
+            resize(this->length_ * 2);
+        this->elements_[this->length_++] = item;
     }
 
-    void prepend(const T& item) override
-    {
-        if (this->getLength() == this->getMemoryLength())
-        {
-            this->memoryLength_ = this->getLength() * 2 + 1;
-            T* temporaryArray = new T[this->getMemoryLength()];
-            temporaryArray[0] = item;
-            for (int i = 0; i < this->getLength(); i++)
-            {
-                temporaryArray[i+1] = this->get(i);
-            }
-            this->elementsArray_ = temporaryArray;
-            this->length_ += 1;
-        }
-        else
-        {
-            this->elementsArray_[this->getLength()] = item;
-            this->length_ += 1;
-            for (int i = this->getLength()-1; i > 0; i--)
-            {
-                swap(i, i - 1);
-            }
 
+
+    void prepend(const T& item) override        //too expensive to use in practice
+    {
+        if (this->length_ == this->getMemoryLength())
+
+            resize(this->length_ * 2);
+        elements_[this->length_++] = item;
+        for (auto i = this->length_-1; i > 0; i--)
+        {
+            swap(i, i - 1);
         }
+
+
     }
 
-    void insertArt(int index, const T& item) override
+
+
+    void insertArt(SizeType index, const T& item) override
     {
-        if ((index < 0) || (index >= this->getLength()))
+        if (index < 0)
+            throw std::invalid_argument("Invalid argument");
+        if (index >= this->length_)
+            throw std::out_of_range("Argument is out of range");
+
+        if (this->length_ == this->getMemoryLength())
+            resize(this->length_ * 2);
+        this->elements_[this->length_++] = item;
+        for (auto i = this->length_ - 1; i > index; i--)
         {
-            throw "Wrong index";
+            swap(i, i - 1);
         }
-        if (this->getLength() == this->getMemoryLength())
-        {
-            this->memoryLength_ = this->getLength() * 2 + 1;
-            T* temporaryArray = new T[this->getMemoryLength()];
-            for (int i = 0; i < index; i++)
-            {
-                temporaryArray[i] = this->get(i);
-            }
-            temporaryArray[index] = item;
-            for (int i = index; i < this->getLength(); i++)
-            {
-                temporaryArray[i + 1] = this->get(i);
-            }
-            this->elementsArray_ = temporaryArray;
-            this->length_ += 1;
-        }
-        else
-        {
-            this->elementsArray_[this->getLength()] = item;
-            this->length_ += 1;
-            for (int i = this->getLength() - 1; i > index; i--)
-            {
-                swap(i, i - 1);
-            }
-        }
+        
     }
 
 
 
     void remove(const T& item) override
     {
-        int position = this->findItem(item);
-        if (position)
-        {
-            auto newSequence = new SequenceArray<T>(this->getLength() - 1);
-            for (int i = 0; i < position - 1; i++)
-                newSequence->elementsArray_[i] = this->get(i);
-            for (int i = position - 1; i < newSequence->getLength(); i++)
-                newSequence->elementsArray_[i] = this->get(i + 1);
-            this->elementsArray_ = newSequence->elementsArray_;
-            this->length_ = newSequence->getLength();
+        SizeType position = this->findItem(item);
+        if (position != 0) {
+            if (this->length_ == this->memoryLength_ / 4)
+                resize(this->memoryLength_ / 2);
+            for (auto i = position - 1; i < this->length_ - 1; i++)
+                swap(i, i + 1);
+            this->length_--;
         }
     }
 
@@ -212,55 +166,77 @@ public:
     void output() const override
     {
         if (this->isEmpty())
-            cout << "This sequence is empty" << endl;
+            std::cout << "This sequence is empty" << std::endl;
         else
         {
-            cout << "Your sequence:" << endl;
-            for (int i = 0; i < this->getLength(); i++)
+            std::cout << "Your sequence:" << std::endl;
+            for (auto i = 0; i < this->length_; i++)
             {
-                cout << this->get(i) << '\t';
+                std::cout << this->get(i) << '\t';
             }
-            cout << endl << endl;
+            std::cout << std::endl << std::endl;
         }
     }
 
 
 
-    void inputElements() override
+    void inputElements(SizeType numberOfElements) override
     {
-        if (this->isEmpty() == 0)
+        T item;
+        std::cout << "Enter the items" << std::endl;
+        for (auto i = 0; i < numberOfElements; i++)
         {
-            cout << "Enter the items" << endl;
-            for (int i = 0; i < this->getLength(); i++)
-            {
-                cout << "Enter the " << i + 1 << " item" << endl;
-                cin >> this->elementsArray_[i];
-            }
+            std::cout << "Enter the " << i + 1 << " item" << std::endl;
+            std::cin >> item;
+            this->append(item);
         }
+
     }
 
     // Методы для 1 л/р:
 
-    void set(T item, int index) override
+    void set(T item, SizeType index) override
     {
-        this->elementsArray_[index] = item;
+        this->elements_[index] = item;
     }
 
 private:
 
-    int memoryLength_;
-    T* elementsArray_;
+    SizeType memoryLength_;
+    T* elements_;
 
-    int findItem(const T& item) const override
+    SizeType findItem(const T& item) const override
     {
-        for (int i = 0; i < this->getLength(); i++)
+        for (auto i = 0; i < this->length_; i++)
         {
-            if (this->elementsArray_[i] == item)
+            if (this->elements_[i] == item)
                 return i + 1;
         }
         return 0;
     }
+
+
+    
+    void resize(size_t capacity)
+    {
+        this->memoryLength_ = capacity;
+        auto temporaryArray = new T[this->getMemoryLength()];
+        for (auto i = 0; i < this->length_; i++)
+        {
+            temporaryArray[i] = this->get(i);
+        }
+        this->elements_ = temporaryArray;
+    }
+
+
+
+    SequenceArray(const SequenceArray&) {};
+
+    void operator=(const SequenceArray&) {};
 };
+
+
+
 
 void test_iterator()
 {
@@ -270,15 +246,14 @@ void test_iterator()
     sequence->append(3);
     sequence->append(2);
     Iterator<int>* it = sequence->getIterator();
-    int i = 0;
-    for (it; it->HasNext(); it->Next())
+    for (int i = 0; it->HasNext(); it->Next())
     {
         if (it->CurrentItem() != sequence->get(i))
         {
-            cout << "Test.iterator isn't passed" << endl;
+            std::cout << "Test.iterator isn't passed" << std::endl;
             break;
         }
         i += 1;
     }
-    cout << "Test.iterator is passed" << endl;
+    std::cout << "Test.iterator is passed" << std::endl;
 }
