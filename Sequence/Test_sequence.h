@@ -37,18 +37,20 @@ bool testSequence()
     try
     {
         sequence->get(1);
+        return false;
     }
-    catch (const char* str)
+    catch (std::exception& exception)
     {
-        cout << str << endl;
+        cout << exception.what() << endl;
     }
     try
     {
         sequence->get(-1);
+        return false;
     }
-    catch (const char* str)
+    catch (std::exception& exception)
     {
-        cout << str << endl;
+        cout << exception.what() << endl;
     }
     cout << "passed" << endl;
     cout << "Test 6.1.8" << endl;
@@ -72,18 +74,20 @@ bool testSequence()
     try
     {
         sequence->get(-1);
+        return false;
     }
-    catch (const char* str)
+    catch (std::exception& exception)
     {
-        cout << str << endl;
+        cout << exception.what() << endl;
     }
     try
     {
         sequence->get(2);
+        return false;
     }
-    catch (const char* str)
+    catch (std::exception& exception)
     {
-        cout << str << endl;
+        cout << exception.what() << endl;
     }
     cout << "passed" << endl;
     cout << "Test 6.1.13" << endl;
@@ -109,18 +113,20 @@ bool testSequence()
     try
     {
         sequence->get(-1);
+        return false;
     }
-    catch (const char* str)
+    catch (std::exception& exception)
     {
-        cout << str << endl;
+        cout << exception.what() << endl;
     }
     try
     {
         sequence->get(3);
+        return false;
     }
-    catch (const char* str)
+    catch (std::exception& exception)
     {
-        cout << str << endl;
+        cout << exception.what() << endl;
     }
     cout << "passed" << endl;
     cout << "Test 6.1.18" << endl;

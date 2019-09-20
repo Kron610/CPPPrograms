@@ -29,7 +29,7 @@ int main()
                 int N = -1;
                 while (N < 0)
                     std::cin >> N;
-                std::cout << "Type of storage of data:\n 1: Array\n 2: List\n";
+                std::cout << "Type of storage of data:\n 1: Array\n 2: Node\n";
                 char choice1;
                 do
                 {
@@ -75,9 +75,9 @@ int main()
                                 {
                                     std::cout << sequence->get(index) << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -87,9 +87,9 @@ int main()
                                 {
                                     std::cout << sequence->getFirst() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -99,9 +99,9 @@ int main()
                                 {
                                     std::cout << sequence->getLast() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -114,9 +114,9 @@ int main()
                                 {
                                     sequence->getSubsequence(startIndex, endIndex)->output();
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -132,9 +132,9 @@ int main()
                                 {
                                     sequence->insertArt(index, item);
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -203,9 +203,9 @@ int main()
                                 {
                                     std::cout << sequence->get(index) << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -215,9 +215,9 @@ int main()
                                 {
                                     std::cout << sequence->getFirst() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -227,9 +227,9 @@ int main()
                                 {
                                     std::cout << sequence->getLast() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -242,9 +242,9 @@ int main()
                                 {
                                     sequence->getSubsequence(startIndex, endIndex)->output();
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -260,9 +260,9 @@ int main()
                                 {
                                     sequence->insertArt(index, item);
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -299,7 +299,7 @@ int main()
                 int N = -1;
                 while (N < 0)
                     std::cin >> N;
-                std::cout << "Type of storage of data:\n 1: Array\n 2: List\n";
+                std::cout << "Type of storage of data:\n 1: Array\n 2: Node\n";
                 char choice1;
                 do
                 {
@@ -345,9 +345,9 @@ int main()
                                 {
                                     std::cout << sequence->get(index) << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -357,9 +357,9 @@ int main()
                                 {
                                     std::cout << sequence->getFirst() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -369,9 +369,9 @@ int main()
                                 {
                                     std::cout << sequence->getLast() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -384,9 +384,9 @@ int main()
                                 {
                                     sequence->getSubsequence(startIndex, endIndex)->output();
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -402,9 +402,9 @@ int main()
                                 {
                                     sequence->insertArt(index, item);
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -473,9 +473,9 @@ int main()
                                 {
                                     std::cout << sequence->get(index) << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -485,9 +485,9 @@ int main()
                                 {
                                     std::cout << sequence->getFirst() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -497,9 +497,9 @@ int main()
                                 {
                                     std::cout << sequence->getLast() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -512,9 +512,9 @@ int main()
                                 {
                                     sequence->getSubsequence(startIndex, endIndex)->output();
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -530,9 +530,9 @@ int main()
                                 {
                                     sequence->insertArt(index, item);
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -567,7 +567,7 @@ int main()
             {
                 std::cout << "You have chosen complex numbers.\n " << std::endl;
                 int N = 0;
-                std::cout << "Type of storage of data:\n 1: Array\n 2: List\n";
+                std::cout << "Type of storage of data:\n 1: Array\n 2: Node\n";
                 char choice1;
                 do
                 {
@@ -619,9 +619,9 @@ int main()
                                 {
                                     std::cout << sequence->get(index) << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -631,9 +631,9 @@ int main()
                                 {
                                     std::cout << sequence->getFirst() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -643,9 +643,9 @@ int main()
                                 {
                                     std::cout << sequence->getLast() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -658,9 +658,9 @@ int main()
                                 {
                                     sequence->getSubsequence(startIndex, endIndex)->output();
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -679,9 +679,9 @@ int main()
                                 {
                                     sequence->insertArt(index, item);
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -759,9 +759,9 @@ int main()
                                 {
                                     std::cout << sequence->get(index) << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -771,9 +771,9 @@ int main()
                                 {
                                     std::cout << sequence->getFirst() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -783,9 +783,9 @@ int main()
                                 {
                                     std::cout << sequence->getLast() << std::endl;
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -798,9 +798,9 @@ int main()
                                 {
                                     sequence->getSubsequence(startIndex, endIndex)->output();
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -819,9 +819,9 @@ int main()
                                 {
                                     sequence->insertArt(index, item);
                                 }
-                                catch (const char* str)
+                                catch (std::exception& exception)
                                 {
-                                    std::cout << str << std::endl;
+                                    std::cout << exception.what() << std::endl;
                                 }
                                 break;
                             }
@@ -857,7 +857,7 @@ int main()
             }
             case '4':
             {
-                return 1;
+                return 0;
             }
             default:
             {

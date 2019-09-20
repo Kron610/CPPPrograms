@@ -88,9 +88,9 @@ public:
         if ((startIndex > this->length_) || (endIndex > this->length_))
             throw std::out_of_range("Indices is out of range");
 
-        auto newSequence = new SequenceArray<T>(endIndex - startIndex + 1);
+        auto newSequence = new SequenceArray<T>();
         for (auto i = startIndex; i < endIndex + 1; i++)
-            newSequence->elements_[i - startIndex] = this->get(i);
+            newSequence->append(this->get(i));
         return newSequence;
     }
 
@@ -132,11 +132,6 @@ public:
 
     void insertArt(SizeType index, const T& item) override
     {
-        if (index < 0)
-            throw std::invalid_argument("Invalid argument");
-        if (index >= this->length_)
-            throw std::out_of_range("Argument is out of range");
-
         if (this->length_ == this->getMemoryLength())
             resize(this->length_ * 2);
         this->elements_[this->length_++] = item;

@@ -8,10 +8,11 @@
 using namespace std;
 
 template <typename T>
-class List
+class Node
 {
 public:
-    List* next;
+    Node* next;
+    Node* previous;
     T data;
 };
 
@@ -41,14 +42,14 @@ public:
 
     ~SequenceList()
     {
-        if (this->isEmpty() == 0)
+        if (!(this->isEmpty()))
         {
-            struct List<T>* temporaryNode;
-            for (SizeType i = 0; i < this->getLength() - 1; i++)
+            Node<T>* temporaryNode;
+            for (SizeType i = 0; i < this->length_ - 1; i++)
             {
-                temporaryNode = this->first_;
-                if (this->first_->next != nullptr)
-                    this->first_ = this->first_->next;
+                temporaryNode = first_;
+                if (first_->next != nullptr)
+                    first_ = first_->next;
                 delete temporaryNode;
             }
         }
@@ -63,10 +64,18 @@ public:
             throw std::invalid_argument("Invalid argument");
         if (index >= this->length_)
             throw std::out_of_range("Argument is out of range");
-        auto temporaryNode = this->first_;
-        for (SizeType i = 0; i < index; i++)
+        Node<T>* temporaryNode;
+        if (index < this->length_ / 2)
         {
-            temporaryNode = temporaryNode->next;
+            temporaryNode = first_;
+            for (SizeType i = 0; i < index; i++)
+                temporaryNode = temporaryNode->next;
+
+        }
+        else {
+            temporaryNode = last_;
+            for (int i = this->length_ - 1; i > index; i--)
+                temporaryNode = temporaryNode->previous;
         }
         return temporaryNode->data;
     }
@@ -74,10 +83,9 @@ public:
     T getFirst() const override
     {
         if (this->isEmpty())
-        {
-            throw "Sequence is empty";
-        }
-        return this->first_->data;
+            throw std::out_of_range("Sequence is empty");
+
+        return first_->data;
     }
 
 
@@ -85,15 +93,9 @@ public:
     T getLast() const override
     {
         if (this->isEmpty())
-        {
-            throw "Sequence is empty";
-        }
-        auto temporaryNode = this->first_;
-        for (SizeType i = 0; i < this->getLength() - 1; i++)
-        {
-            temporaryNode = temporaryNode->next;
-        }
-        return temporaryNode->data;
+            throw std::out_of_range("Sequence is empty");
+
+        return last_->data;
     }
 
 
@@ -101,25 +103,17 @@ public:
     SequenceList<T>* getSubsequence(SizeType startIndex, SizeType endIndex)
     {
         if (this->isEmpty())
-            throw "Sequence is empty";
-        if ((startIndex < 0) || (startIndex > this->getLength()) || (endIndex < 0) || (endIndex > this->getLength()))
-            throw "Wrong index";
+            throw std::out_of_range("Sequence is empty");
+        if ((startIndex < 0) || (startIndex > this->length_) || (endIndex < 0) || (endIndex > this->length_))
+            throw std::invalid_argument("Invalid index");
         if (startIndex > endIndex)
-            throw "Start index is more than last index";
-        auto temporaryNode = this->first_;
-        auto newSequence = new SequenceList<T>(endIndex - startIndex + 1);
-        for (SizeType i = 0; i < startIndex; i++)
-        {
-            temporaryNode = temporaryNode->next;
-        }
-        newSequence->first_->data = temporaryNode->data;
-        auto temporaryNode2 = newSequence->first_;
-        for (SizeType i = startIndex; i < endIndex; i++)
-        {
-            temporaryNode2 = temporaryNode2->next;
-            temporaryNode = temporaryNode->next;
-            temporaryNode2->data = temporaryNode->data;
-        }
+            throw std::invalid_argument("Start index is more than last index");
+        if ((startIndex > this->length_) || (endIndex > this->length_))
+            throw std::out_of_range("Indices is out of range");
+
+        auto newSequence = new SequenceList();
+        for (auto i = startIndex; i < endIndex + 1; i++)
+            newSequence->append(this->get(i));
         return newSequence;
     }
 
@@ -129,18 +123,20 @@ public:
     {
         if (this->isEmpty())
         {
-            this->first_ = new List<T>;
-            this->first_->data = item;
+            last_ = new Node<T>;
+            last_->data = item;
+            last_->next = 0;
+            last_->previous = 0;
+            first_ = last_;
         }
         else
         {
-            auto temporaryNode = this->first_;
-            for (SizeType i = 0; i < this->getLength() - 1; i++)
-            {
-                temporaryNode = temporaryNode->next;
-            }
-            temporaryNode->next = new List<T>;
-            temporaryNode->next->data = item;
+            Node<T>* oldLast = last_;
+            last_ = new Node<T>;
+            last_->data = item;
+            last_->previous = oldLast;
+            last_->next = 0;
+            oldLast->next = last_;
         }
         this->length_ += 1;
     }
@@ -149,47 +145,74 @@ public:
 
     void prepend(const T& item) override
     {
-        this->length_ += 1;
-        auto temporaryNode = new List<T>;
-        temporaryNode->data = item;
         if (this->isEmpty())
         {
-            this->first_ = temporaryNode;
+            first_ = new Node<T>;
+            first_->data = item;
+            first_->next = 0;
+            first_->previous = 0;
+            last_ = first_;
         }
         else
         {
-            temporaryNode->next = this->first_;
-            this->first_ = temporaryNode;
+            Node<T>* oldFirst = first_;
+            first_ = new Node<T>;
+            first_->data = item;
+            first_->next = oldFirst;
+            first_->previous = 0;
+            oldFirst->previous = first_;
         }
+        this->length_ += 1;
     }
 
 
 
     void insertArt(SizeType index, const T& item) override
     {
-        if ((index < 0) || (index >= this->getLength()))
-        {
-            throw "Wrong index";
-        }
-        List<T>* temporaryNode;
+        if (index < 0)
+            throw std::invalid_argument("Invalid argument");
+        if (index >= this->length_)
+            throw std::out_of_range("Argument is out of range");
+
+        Node<T>* temporaryNode;
         if (index == 0)
         {
-            temporaryNode = new List<T>;
-            temporaryNode->data = item;
-            temporaryNode->next = this->first_;
-            this->first_ = temporaryNode;
+            prepend(item);
+            this->length_ += 1;
+            return;
         }
-        else
+        if (index == this->length_ - 1)
         {
-            temporaryNode = this->first_;
+            append(item);
+            this->length_ += 1;
+            return;
+        }
+
+        if (index < this->length_ / 2)
+        {
+            temporaryNode = first_;
             for (SizeType i = 1; i < index; i++)
                 temporaryNode = temporaryNode->next;
-            auto temporaryNode2 = new List<T>;
+            auto temporaryNode2 = new Node<T>;
             temporaryNode2->data = item;
             temporaryNode2->next = temporaryNode->next;
+            temporaryNode->next->previous = temporaryNode2;
             temporaryNode->next = temporaryNode2;
+            temporaryNode2->previous = temporaryNode;
+            this->length_ += 1;
         }
-        this->length_ += 1;
+        else {
+            temporaryNode = last_;
+            for (SizeType i = this->length_ - 1; i > index; i--)
+                temporaryNode = temporaryNode->previous;
+            auto temporaryNode2 = new Node<T>;
+            temporaryNode2->data = item;
+            temporaryNode2->previous = temporaryNode->previous;
+            temporaryNode->previous->next = temporaryNode2;
+            temporaryNode->previous = temporaryNode2;
+            temporaryNode2->next = temporaryNode;
+            this->length_ += 1;
+        }
     }
 
 
@@ -200,10 +223,10 @@ public:
             return 0;
         else
         {
-            List<T>* temporaryNode = this->first_;
+            Node<T>* temporaryNode = first_;
             if (temporaryNode->data == item)
                 return 1;
-            for (SizeType i = 1; i < this->getLength(); i++)
+            for (SizeType i = 1; i < this->length_; i++)
             {
                 temporaryNode = temporaryNode->next;
                 if (temporaryNode->data == item)
@@ -217,22 +240,36 @@ public:
 
     void remove(const T& item) override
     {
-        SizeType position = this->findItem(item);
+        SizeType position = findItem(item);
         if (position)
         {
-            auto temporaryNode = this->first_;
+            auto temporaryNode = first_;
             if (position == 1)
             {
-                this->first_ = this->first_->next;
+                first_ = first_->next;
+                first_->previous = 0;
                 delete temporaryNode;
             }
             else
             {
-                for (SizeType i = 0; i < position - 2; i++)
-                    temporaryNode = temporaryNode->next;
-                auto temporaryNode2 = temporaryNode->next;
-                temporaryNode->next = temporaryNode2->next;
-                delete temporaryNode2;
+                if (position - 1 < this->length_ / 2)
+                {
+                    for (auto i = 0; i < position - 2; i++)
+                        temporaryNode = temporaryNode->next;
+                    auto temporaryNode2 = temporaryNode->next;
+                    temporaryNode->next = temporaryNode2->next;
+                    temporaryNode->next->previous = temporaryNode;
+                    delete temporaryNode2;
+                }
+                else {
+                    temporaryNode = last_;
+                    for (auto i = this->length_ - 1; i > position - 1; i--)
+                        temporaryNode = temporaryNode->previous;
+                    auto temporaryNode2 = temporaryNode->previous;
+                    temporaryNode->previous = temporaryNode2->previous;
+                    temporaryNode->previous->next = temporaryNode;
+                    delete temporaryNode2;
+                }
             }
         }
         this->length_ -= 1;
@@ -270,7 +307,7 @@ public:
             {
                 std::cout << "Enter the " << i + 1 << " item" << std::endl;
                 std::cin >> item;
-                this->prepend(item);
+                this->append(item);
             }
     }
 
@@ -289,5 +326,6 @@ public:
     }
 
 private:
-    List<T>* first_;
+    Node<T>* first_;
+    Node<T>* last_;
 };
